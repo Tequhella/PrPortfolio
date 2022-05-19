@@ -2,14 +2,24 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\RegistrationFormType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/* C'est un contrôleur qui gère les requêtes à l'URL `/user` */
 class UserController extends AbstractController
 {
+    /**
+     * La fonction `index()` est une fonction de contrôleur qui renvoie un objet de réponse
+     * 
+     * @return Response Un objet Response
+     */
     #[Route('/user', name: 'app_user')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
