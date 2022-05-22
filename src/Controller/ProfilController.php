@@ -6,15 +6,23 @@ use App\Entity\User;
 use App\Form\UploadPortfolioType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ProfilController extends AbstractController
 {
-    #[Route('/profil', name: 'app_profil')]
-    public function index(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('{name}/profil', name: 'app_profil')]
+    public function user(EntityManagerInterface $manager, string $name) : Response
+    {
+        $user = $manager->getRepository(User::class)->findOneBy(['name' => $name]);
+        return $this->render('user/index.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
+    #[Route('{name}/profil', name: 'app_profil')]
+    public function index(Request $request, EntityManagerInterface $manager, string $name): Response
     {
         if ($this->getUser())
         {
@@ -30,21 +38,22 @@ class ProfilController extends AbstractController
                 $file = $data['portfolio'];
                 $file->move($path, $file->getClientOriginalName());
                 // save file name in database
-                $user = $this->getUser();
+                $user = $manager->getRepository(User::class)->findBy(['name' => $name]);
                 $user->setPortfolio($file->getClientOriginalName());
-                $entityManager->persist($user);
-                $entityManager->flush();
+                $manager->persist($user);
+                $manager->flush();
+                return $this->render('{name}/index.html.twig');
             }
-            return $this->render('profil/index.html.twig');
+            return $this->render('profil/index.html.twig', [
+                'controller_name' => 'ProfilController',
+                'form' => $form->createView(),
+            ]);
+        }
+        else
+        {
+            return $this->redirectToRoute('app_login');
         }
         
-        
-        
-        
-
-        return $this->render('profil/index.html.twig', [
-            'controller_name' => 'ProfilController',
-        ]);
     }
 }
 

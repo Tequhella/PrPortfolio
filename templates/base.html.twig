@@ -48,6 +48,9 @@
         <div class="content" class="w3-content w3-padding" style="max-width:1564px">
         </div>
 
+        {% if app.user %}
+            <a href="/logout">Log out</a>
+        {% endif %}
         {% block body %}{% endblock %}
     </body>
 </html>

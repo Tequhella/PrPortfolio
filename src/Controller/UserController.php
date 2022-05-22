@@ -18,8 +18,8 @@ class UserController extends AbstractController
      * 
      * @return Response Un objet Response
      */
-    #[Route('/user', name: 'app_user')]
-    public function index(Request $request): Response
+    #[Route('/{name}', name: 'app_user')]
+    public function index(Request $request, string $name): Response
     {
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
