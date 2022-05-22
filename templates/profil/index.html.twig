@@ -17,4 +17,36 @@
         <li>Your template at <code><a href="{{ '/home/tequhella/Documents/VScode/Projet_Web/PrPortfolio/templates/profil/index.html.twig'|file_link(0) }}">templates/profil/index.html.twig</a></code></li>
     </ul>
 </div>
+
+<div class="w3-top">
+    <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+        <a href="#home" class="w3-bar-item w3-button"><b>PR</b> Portfolios</a>
+        <!-- Float links to the right. Hide them on small screens -->
+        <div class="topnav">
+            <a href="AdvancedSearch.html">
+                <input type="text" placeholder="Search.." type="submit">
+            </a>
+        </div>
+
+        <div class="w3-right w3-hide-small" style="bottom:10px">
+            <a href="Aboutus.html" class="w3-bar-item w3-button">About us</a>
+            <a  class="w3-bar-item w3-button">Profile</a>
+            <a  class="w3-bar-item w3-butt  on">Historic</a>
+            <a href="contact.html" class="w3-bar-item w3-button">Contact</a>
+        </div>
+    </div>
+</div>
+
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+
+<form action="" method="get" class="portfoliobouton">
+<div>
+<label for="Portfolio">Déposer votre Portfolio <br></label> <br>
+<input type="file"
+       id="Portfolio" name="Portfolio"> <br> <br>
+    <input type="submit" value="Upload">
+
+</div>
 {% endblock %}
