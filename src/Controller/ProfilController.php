@@ -13,19 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProfilController extends AbstractController
 {
     #[Route('{name}/profil', name: 'app_profil')]
-    public function user(EntityManagerInterface $manager, string $name) : Response
-    {
-        $user = $manager->getRepository(User::class)->findOneBy(['name' => $name]);
-        return $this->render('user/index.html.twig', [
-            'user' => $user,
-        ]);
-    }
-
-    #[Route('{name}/profil', name: 'app_profil')]
-    public function index(Request $request, EntityManagerInterface $manager, string $name): Response
+    public function index(Request $request, EntityManagerInterface $manager): Response
     {
         if ($this->getUser())
         {
+            $user = $manager->getRepository(User::class)->findBy(['email' => $this->getUser()->getUserIdentifier()]);
+            $name = $user[0]->getNom();
             // système d'upload de portfolio
             $form = $this->createForm(UploadPortfolioType::class);
             $form->handleRequest($request);
@@ -38,13 +31,13 @@ class ProfilController extends AbstractController
                 $file = $data['portfolio'];
                 $file->move($path, $file->getClientOriginalName());
                 // save file name in database
-                $user = $manager->getRepository(User::class)->findBy(['name' => $name]);
+                
                 $user->setPortfolio($file->getClientOriginalName());
                 $manager->persist($user);
                 $manager->flush();
-                return $this->render('{name}/index.html.twig');
+                return $this->render('{name}/index.html.twig', ['name' => $name]);
             }
-            return $this->render('profil/index.html.twig', [
+            return $this->render('{name}/profil/index.html.twig', [
                 'controller_name' => 'ProfilController',
                 'form' => $form->createView(),
             ]);

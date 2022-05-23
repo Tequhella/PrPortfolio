@@ -18,11 +18,14 @@ class UserController extends AbstractController
      * 
      * @return Response Un objet Response
      */
-    #[Route('/{name}', name: 'app_user')]
-    public function index(Request $request, string $name): Response
+    #[Route('/user', name: 'app_user')]
+    public function index(Request $request, EntityManagerInterface $manager): Response
     {
-        return $this->render('user/index.html.twig', [
+        $user = $manager->getRepository(User::class)->findBy(['id' => $this->getUser()->getUserIdentifier()]);
+        $name = $user[0]->getName();
+        return $this->render('user/{name}/profil/index.html.twig', [
             'controller_name' => 'UserController',
+            'name' => $name,
         ]);
     }
 }
