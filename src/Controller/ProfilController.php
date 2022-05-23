@@ -50,7 +50,8 @@ class ProfilController extends AbstractController
             }
             return $this->render('/profil/index.html.twig', [
                 'controller_name' => 'ProfilController',
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'user' => $user[0]
             ]);
         }
         else
