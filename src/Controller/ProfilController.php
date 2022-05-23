@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use ZipArchive;
 
 class ProfilController extends AbstractController
 {
@@ -26,20 +27,30 @@ class ProfilController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $data = $form->getData();
                 // path to upload
-                $path = $this->getParameter('kernel.project_dir').'/public/uploads/';
+                $path = $this->getParameter('kernel.project_dir').'/templates/uploads/';
                 // upload file
-                $file = $data['portfolio'];
+                $file = $data['upload'];
                 $file->move($path, $file->getClientOriginalName());
                 // save file name in database
-                
-                $user->setPortfolio($file->getClientOriginalName());
-                $manager->persist($user);
+                $user[0]->setPortfolio($file->getClientOriginalName());
+                $manager->persist($user[0]);
                 $manager->flush();
-                return $this->render('{name}/index.html.twig', ['name' => $name]);
+                $zip = new ZipArchive();
+                $res = $zip->open($path.$file->getClientOriginalName());
+                if ($res === TRUE) {
+                    $zip->extractTo($path);
+                    $zip->close();
+                }
+                unlink($path.$file->getClientOriginalName());
+                // redirect to profil page
+                return $this->render('/profil/index.html.twig', [
+                    'controller_name' => 'ProfilController',
+                    'form' => $form->createView()
+                ]);
             }
-            return $this->render('{name}/profil/index.html.twig', [
+            return $this->render('/profil/index.html.twig', [
                 'controller_name' => 'ProfilController',
-                'form' => $form->createView(),
+                'form' => $form->createView()
             ]);
         }
         else

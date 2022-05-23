@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,7 +51,8 @@ class UserAuthenticationAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // For example:
-        $name = $request->getSession()->get('nom');
+        $user = $request->getSession()->get('user');
+        $name = $user->getNom();
         return new RedirectResponse($this->urlGenerator->generate('app_profil', ['name' => $name]));
         // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }

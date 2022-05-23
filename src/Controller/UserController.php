@@ -18,12 +18,12 @@ class UserController extends AbstractController
      * 
      * @return Response Un objet Response
      */
-    #[Route('/user', name: 'app_user')]
+    #[Route('/{name}', name: 'app_user')]
     public function index(Request $request, EntityManagerInterface $manager): Response
     {
-        $user = $manager->getRepository(User::class)->findBy(['id' => $this->getUser()->getUserIdentifier()]);
-        $name = $user[0]->getName();
-        return $this->render('user/{name}/profil/index.html.twig', [
+        $user = $manager->getRepository(User::class)->findBy(['email' => $this->getUser()->getUserIdentifier()]);
+        $name = $user[0]->getNom();
+        return $this->render('/uploads/Chardon/public/index.php', [
             'controller_name' => 'UserController',
             'name' => $name,
         ]);
